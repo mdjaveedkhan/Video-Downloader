@@ -2,57 +2,49 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Video Downloader</title>
+    <title>Universal Video Downloader</title>
     <link rel="stylesheet" href="/static/styles.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 
 <div class="container">
-    <h1>🎥 Video Downloader</h1>
+    <h1>📥 Universal Video Downloader</h1>
 
-    <input type="text" id="url" placeholder="Paste Instagram / YouTube link">
+    <input type="text" id="url" placeholder="Paste video link here">
 
     <select id="format">
         <option value="mp4">MP4 (Video)</option>
         <option value="mp3">MP3 (Audio)</option>
     </select>
 
-    <select id="quality">
-        <option value="best">Best Quality</option>
-        <option value="1080">1080p</option>
-        <option value="720">720p</option>
-        <option value="480">480p</option>
-    </select>
-
-    <button onclick="startDownload()">Download</button>
+    <button onclick="download()">Download</button>
 
     <p id="status"></p>
 </div>
 
 <script>
-function startDownload() {
+function download() {
     const url = document.getElementById("url").value;
     const format = document.getElementById("format").value;
-    const quality = document.getElementById("quality").value;
 
-    document.getElementById("status").innerText = "⏳ Downloading...";
+    document.getElementById("status").innerText = "⏳ Preparing download...";
 
     const formData = new FormData();
     formData.append("url", url);
     formData.append("format", format);
-    formData.append("quality", quality);
 
-    fetch("/download", {
+    fetch("/get_link", {
         method: "POST",
         body: formData
     })
     .then(res => res.json())
     .then(data => {
-        if (data.success) {
-            document.getElementById("status").innerText = "✅ Download Completed!";
+        if (data.download_url) {
+            window.location.href = data.download_url;
+            document.getElementById("status").innerText = "✅ Download started!";
         } else {
-            document.getElementById("status").innerText = "❌ Error: " + data.error;
+            document.getElementById("status").innerText = "❌ Video restricted";
         }
     });
 }
