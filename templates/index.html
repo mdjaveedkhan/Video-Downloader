@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Video Downloader</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<div class="container">
+    <h1>🎥 Video Downloader</h1>
+
+    <input type="text" id="url" placeholder="Paste Instagram / YouTube link">
+
+    <select id="format">
+        <option value="mp4">MP4 (Video)</option>
+        <option value="mp3">MP3 (Audio)</option>
+    </select>
+
+    <select id="quality">
+        <option value="best">Best Quality</option>
+        <option value="1080">1080p</option>
+        <option value="720">720p</option>
+        <option value="480">480p</option>
+    </select>
+
+    <button onclick="startDownload()">Download</button>
+
+    <p id="status"></p>
+</div>
+
+<script>
+function startDownload() {
+    const url = document.getElementById("url").value;
+    const format = document.getElementById("format").value;
+    const quality = document.getElementById("quality").value;
+
+    document.getElementById("status").innerText = "⏳ Downloading...";
+
+    const formData = new FormData();
+    formData.append("url", url);
+    formData.append("format", format);
+    formData.append("quality", quality);
+
+    fetch("/download", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById("status").innerText = "✅ Download Completed!";
+        } else {
+            document.getElementById("status").innerText = "❌ Error: " + data.error;
+        }
+    });
+}
+</script>
+
+</body>
+</html>
