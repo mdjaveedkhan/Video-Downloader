@@ -24,10 +24,9 @@ def download():
 
     # Options for yt-dlp
     ydl_opts = {
-        # Using a template that ensures we know where the file goes
-        "outtmpl": f"{DOWNLOAD_FOLDER}/%(title)s.%(ext)s",
-        "noplaylist": True,
-    }
+    'outtmpl': '/tmp/%(title)s.%(ext)s',
+    'ffmpeg_location': '/usr/bin/ffmpeg', # Path where apt-get installs it
+}
 
     if format_type == "mp3":
         ydl_opts.update({
@@ -72,4 +71,5 @@ def download():
         return str(e), 500
 
 if __name__ == "__main__":
+
     app.run(debug=True)
